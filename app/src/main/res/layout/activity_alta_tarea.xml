@@ -67,11 +67,26 @@
         android:text="Responsable"
         android:id="@+id/textView5" />
 
-    <Spinner
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:id="@+id/spinner"
-        style="@android:style/Widget.Spinner.DropDown"/>
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <Spinner
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            style="@android:style/Widget.Spinner.DropDown"
+            android:layout_weight="0.93" />
+
+        <ImageButton android:id="@+id/button_crear_usuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Agregar Usuario"
+            android:src="@drawable/ic_agregar_usuario" />
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -85,6 +100,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancelar"
-        android:id="@+id/btnCanelar" />
-</LinearLayout>
+        android:id="@+id/btnCanelar"
+        />
+
+    </LinearLayout>
     </LinearLayout>

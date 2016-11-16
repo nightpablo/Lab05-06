@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class AltaTareaActivity extends AppCompatActivity {
     private List<Prioridad> listaPrioridad;
     private Tarea tarea;
     private boolean esEditable;
+    private ImageButton crearUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class AltaTareaActivity extends AppCompatActivity {
         responsable = (Spinner) findViewById(R.id.spinner);
         guardar = (Button) findViewById(R.id.btnGuardar);
         cancelar = (Button) findViewById(R.id.btnCanelar);
+        crearUsuario = (ImageButton) findViewById(R.id.button_crear_usuario);
 
 
         barraPrioridad.setMax(3);
@@ -63,7 +66,18 @@ public class AltaTareaActivity extends AppCompatActivity {
         responsable.setAdapter(adaptador);
         responsable.setBackgroundColor(Color.BLACK);
 
+        crearUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AltaTareaActivity.this,AltaUsuarioActivity.class));
+                List<Usuario> listaUsuario = registro.listarUsuarios();
+                ArrayAdapter<Usuario> adaptador = new ArrayAdapter<Usuario>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item);
+                adaptador.add(new Usuario(-1,"[Seleccione un usuario]","Ejemplo@Ejemplo.com"));
+                adaptador.addAll(listaUsuario);
 
+                responsable.setAdapter(adaptador);
+            }
+        });
 
         listaPrioridad = registro.listarPrioridades();
         prioridad.setText("Prioridad: "+listaPrioridad.get(0).toString());

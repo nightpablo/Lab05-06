@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".AltaTareaActivity"></activity>
         <activity android:name=".BusquedaTarea"></activity>
+        <activity android:name=".AltaUsuarioActivity"></activity>
     </application>
 
 </manifest>
