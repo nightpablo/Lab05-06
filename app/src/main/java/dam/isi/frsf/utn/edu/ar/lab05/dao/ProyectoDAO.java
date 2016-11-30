@@ -259,7 +259,7 @@ public class ProyectoDAO {
     public Tarea buscarTarea(int ID){
         List<Tarea> listaTarea = listarTareas(1);
         for(Tarea i: listaTarea)
-            if(i.getId()==ID) {
+            if(i.getId()==ID)
 
                 /*Log.i("Retorno","ID:"+i.getId()+
                         ". Descripcion:"+i.getDescripcion()+
@@ -269,7 +269,7 @@ public class ProyectoDAO {
                 ". ID Prioridad:"+i.getPrioridad().getId()+
                         ". ID Responsable:"+i.getResponsable().getId());*/
                 return i;
-            }
+
         return null;
     }
 

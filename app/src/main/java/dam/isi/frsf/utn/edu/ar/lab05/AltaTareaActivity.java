@@ -17,10 +17,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
+import dam.isi.frsf.utn.edu.ar.lab05.dao.RestClient;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
@@ -44,7 +49,6 @@ public class AltaTareaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alta_tarea);
-
         registro = new ProyectoDAO(AltaTareaActivity.this);
 
         descripcionTarea = (EditText) findViewById(R.id.editText);
@@ -144,6 +148,7 @@ public class AltaTareaActivity extends AppCompatActivity {
                         tarea.setFinalizada(false);
                         tarea.setProyecto(registro.buscarProyecto(1)); // Proyecto 1 temporal
                         registro.nuevaTarea(tarea);
+                        new RestClient().crear(tarea.toJSON(), ProyectoDBMetadata.TABLA_TAREAS);
                         Toast.makeText(AltaTareaActivity.this,"Se creó una nueva tarea",Toast.LENGTH_SHORT).show();
                     }
                     Intent actividad = new Intent();

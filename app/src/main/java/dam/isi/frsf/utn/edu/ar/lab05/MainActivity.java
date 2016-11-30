@@ -20,9 +20,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.dao.RestClient;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intActAlta= new Intent(MainActivity.this,AltaTareaActivity.class);
                 intActAlta.putExtra("ID_TAREA", 0);
 
+                //Log.i("JSON: ",jsonObject.toString());
 
                 startActivityForResult(intActAlta,1234);
             }

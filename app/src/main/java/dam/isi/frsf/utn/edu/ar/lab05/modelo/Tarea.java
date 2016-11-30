@@ -1,5 +1,12 @@
 package dam.isi.frsf.utn.edu.ar.lab05.modelo;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
+
 /**
  * Created by mdominguez on 06/10/16.
  */
@@ -61,6 +68,7 @@ public class Tarea {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
     public Boolean getFinalizada() {
         return finalizada;
     }
@@ -95,13 +103,32 @@ public class Tarea {
 
     @Override
     public String toString() {
-        return  "Proyecto: "+proyecto.getNombre()+
-                "\nID: "+id+"\nDescripción: "+descripcion+
-                "\nHora Estimada: "+horasEstimadas+
-                "\nMinutos Trabajados: "+minutosTrabajados
-                +"\nFinalizada: "+finalizada
-                +"\nPrioridad: "+prioridad.getPrioridad()
-                +"\nResponsable: "+responsable.getNombre();
+        return "Proyecto: " + proyecto.getNombre() +
+                "\nID: " + id + "\nDescripción: " + descripcion +
+                "\nHora Estimada: " + horasEstimadas +
+                "\nMinutos Trabajados: " + minutosTrabajados
+                + "\nFinalizada: " + finalizada
+                + "\nPrioridad: " + prioridad.getPrioridad()
+                + "\nResponsable: " + responsable.getNombre();
 
     }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS, getHorasEstimadas());
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS, getMinutosTrabajados());
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.FINALIZADA, getFinalizada());
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.PROYECTO, getProyecto().getId());
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.PRIORIDAD, getPrioridad().getId());
+            jsonObject.put(ProyectoDBMetadata.TablaTareasMetadata.RESPONSABLE, getResponsable().getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("JSON-TAREA: ",jsonObject.toString());
+        return jsonObject;
+    }
+
+
 }
