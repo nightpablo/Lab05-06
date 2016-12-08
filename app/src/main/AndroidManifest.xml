@@ -21,10 +21,12 @@
         <activity android:name=".AltaTareaActivity"></activity>
         <activity android:name=".BusquedaTarea"></activity>
         <activity android:name=".AltaUsuarioActivity"></activity>
+        <activity android:name=".SeccionProyectoActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
 </manifest>

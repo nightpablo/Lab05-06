@@ -1,13 +1,10 @@
 package dam.isi.frsf.utn.edu.ar.lab05;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,15 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Serializable;
 import java.util.List;
 
+import dam.isi.frsf.utn.edu.ar.lab05.api.TareaApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.RestClient;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
@@ -148,7 +140,8 @@ public class AltaTareaActivity extends AppCompatActivity {
                         tarea.setFinalizada(false);
                         tarea.setProyecto(registro.buscarProyecto(1)); // Proyecto 1 temporal
                         registro.nuevaTarea(tarea);
-                        new RestClient().crear(tarea.toJSON(), ProyectoDBMetadata.TABLA_TAREAS);
+
+                        new TareaApiRest().crear(tarea);
                         Toast.makeText(AltaTareaActivity.this,"Se creó una nueva tarea",Toast.LENGTH_SHORT).show();
                     }
                     Intent actividad = new Intent();
@@ -169,6 +162,20 @@ public class AltaTareaActivity extends AppCompatActivity {
         });
 
 
+        //PRUEBAAAAA
+        //Proyecto a = new Proyecto(2,"Proyecto 4");
+        //new TaskAsyncHTTP().execute("proyectos","PUT",a.toJSON(),a.getId());
+        //new TaskAsyncHTTP().execute("proyectos","GET");
+        //new TaskAsyncHTTP().execute("proyectos","DELETE",2);
+        //new TaskAsyncHTTP().execute("proyectos","DELETE",1);
+        //Proyecto a = new Proyecto();
+        //a.setNombre("Proyecto 1");
+        //new TaskAsyncHTTP().execute("proyectos","POST",a.toJSON());
+        //Proyecto b = new Proyecto();
+        //b.setNombre("Proyecto 2");
+        //new TaskAsyncHTTP().execute("proyectos","POST",b.toJSON());
+
+        //Log.d("Proyectos: ",""+new ProyectoApiRest().listarProyectos().toString());
 
 
     }

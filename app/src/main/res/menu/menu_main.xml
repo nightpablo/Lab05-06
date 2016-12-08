@@ -13,4 +13,9 @@
         android:orderInCategory="100"
         android:title="@string/buscar_tarea"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/seccion_proyecto"
+        android:orderInCategory="100"
+        android:title="Sección de Proyectos"
+        app:showAsAction="never" />
 </menu>

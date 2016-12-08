@@ -1,5 +1,12 @@
 package dam.isi.frsf.utn.edu.ar.lab05.modelo;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import dam.isi.frsf.utn.edu.ar.lab05.api.ProyectoDBApiRestMetaData;
+
 /**
  * Created by mdominguez on 06/10/16.
  */
@@ -10,6 +17,15 @@ public class Proyecto {
 
     public Proyecto() {
 
+    }
+
+    public Proyecto(JSONObject jsonObject) {
+        try {
+            id = jsonObject.getInt(ProyectoDBApiRestMetaData.TablaProyectoMetadata.ID);
+            nombre = jsonObject.getString(ProyectoDBApiRestMetaData.TablaProyectoMetadata.NOMBRE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -32,5 +48,21 @@ public class Proyecto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(ProyectoDBApiRestMetaData.TablaProyectoMetadata.NOMBRE,nombre);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i("JSON-PROYECTO: ",jsonObject.toString());
+        return jsonObject;
     }
 }

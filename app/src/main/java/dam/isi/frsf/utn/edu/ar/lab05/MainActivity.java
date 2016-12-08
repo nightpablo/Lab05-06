@@ -4,10 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,14 +18,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
-
 import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.RestClient;
-import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -130,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
                     );
 
             builder.create().show();
+        }
+        else if(id == R.id.seccion_proyecto){
+            Intent i = new Intent(MainActivity.this,SeccionProyectoActivity.class);
+            startActivity(i);
         }
 
 
