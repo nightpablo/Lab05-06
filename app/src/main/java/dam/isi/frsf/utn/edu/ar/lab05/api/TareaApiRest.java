@@ -1,5 +1,7 @@
 package dam.isi.frsf.utn.edu.ar.lab05.api;
 
+import android.content.ContentValues;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,26 +18,28 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class TareaApiRest implements ApiRestImplementation<Tarea>{
 
+    String NombreTabla = ProyectoDBApiRestMetaData.TABLA_TAREA;
+
     @Override
     public void crear(Tarea entrada) {
-        new TaskAsyncHTTP().execute("tareas","POST",entrada.toJSON());
+        new TaskAsyncHTTP().execute(NombreTabla,"POST",entrada.toJSON());
     }
 
     @Override
     public void borrar(Integer id) {
-        new TaskAsyncHTTP().execute("tareas","DELETE",id);
+        new TaskAsyncHTTP().execute(NombreTabla,"DELETE",id);
     }
 
     @Override
     public void actualizar(Tarea entrada) {
-        new TaskAsyncHTTP().execute("tareas","PUT",entrada.toJSON(),entrada.getId());
+        new TaskAsyncHTTP().execute(NombreTabla,"PUT",entrada.toJSON(),entrada.getId());
     }
 
     @Override
     public List<Tarea> listar() {
         List<Tarea> lista_tareas = new ArrayList<Tarea>();
         try {
-            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute("tareas","GET").get();
+            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute(NombreTabla,"GET").get();
             for(int i=0;i<listar.length();i++){
                 lista_tareas.add(new Tarea(listar.getJSONObject(i)));
             }
@@ -57,5 +61,32 @@ public class TareaApiRest implements ApiRestImplementation<Tarea>{
             if(i.getId()==id)
                 return i;
         return null;
+    }
+
+    public void finalizar(Integer idTarea){
+        //Establecemos los campos-valores a actualizar
+        Tarea elregistro = buscarPorId(idTarea);
+        elregistro.setFinalizada(true);
+        actualizar(elregistro);
+    }
+
+    public List<Tarea> listarDesviosPlanificacion(Boolean soloTerminadas,Integer desvioMaximoMinutos){
+        // retorna una lista de todas las tareas que tardaron más (en exceso) o menos (por defecto)
+        // que el tiempo planificado.
+        // si la bandera soloTerminadas es true, se busca en las tareas terminadas, sino en todas.
+        List<Tarea> listatarea = listar();
+        List<Tarea> listaretorno = new ArrayList<Tarea>();
+        for(Tarea i:listatarea){
+            if(!soloTerminadas) {
+                if (Math.abs(i.getMinutosTrabajados() - i.getHorasEstimadas() * 60) < desvioMaximoMinutos)
+                    listaretorno.add(i);
+            }
+            else{
+                if(i.getFinalizada())
+                    if (Math.abs(i.getMinutosTrabajados() - i.getHorasEstimadas() * 60) < desvioMaximoMinutos)
+                        listaretorno.add(i);
+            }
+        }
+        return listaretorno;
     }
 }

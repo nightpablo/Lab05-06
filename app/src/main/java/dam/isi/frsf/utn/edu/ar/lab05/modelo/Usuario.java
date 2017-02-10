@@ -20,6 +20,12 @@ public class Usuario {
 
     }
 
+    public Usuario(String nombre, String correoElectronico) {
+
+        this.nombre = nombre;
+        this.correoElectronico = correoElectronico;
+    }
+
     public Usuario(Integer id, String nombre, String correoElectronico) {
         this.id = id;
         this.nombre = nombre;

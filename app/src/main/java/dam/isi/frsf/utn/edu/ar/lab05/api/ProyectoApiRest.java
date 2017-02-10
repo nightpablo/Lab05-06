@@ -15,16 +15,18 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Proyecto;
  */
 public class ProyectoApiRest implements ApiRestImplementation<Proyecto> {
 
-    public void crear(Proyecto entrada){new TaskAsyncHTTP().execute("proyectos","POST",entrada.toJSON());}
+    String NombreTabla = ProyectoDBApiRestMetaData.TABLA_PROYECTO;
+
+    public void crear(Proyecto entrada){new TaskAsyncHTTP().execute(NombreTabla,"POST",entrada.toJSON());}
     public void borrar(Integer id){
-        new TaskAsyncHTTP().execute("proyectos","DELETE",id);
+        new TaskAsyncHTTP().execute(NombreTabla,"DELETE",id);
     }
-    public void actualizar(Proyecto entrada){new TaskAsyncHTTP().execute("proyectos","PUT",entrada.toJSON(),entrada.getId());}
+    public void actualizar(Proyecto entrada){new TaskAsyncHTTP().execute(NombreTabla,"PUT",entrada.toJSON(),entrada.getId());}
 
     public List<Proyecto> listar(){
         List<Proyecto> lista_proyectos = new ArrayList<Proyecto>();
         try {
-            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute("proyectos","GET").get();
+            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute(NombreTabla,"GET").get();
             for(int i=0;i<listar.length();i++){
                 lista_proyectos.add(new Proyecto(listar.getJSONObject(i)));
             }

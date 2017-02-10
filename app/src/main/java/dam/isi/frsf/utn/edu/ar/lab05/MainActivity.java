@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,19 +14,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.util.List;
 
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.api.ProyectoDBApiRestMetaData;
+import dam.isi.frsf.utn.edu.ar.lab05.api.TareaApiRest;
+import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvTareas;
-    private ProyectoDAO proyectoDAO;
-    private Cursor cursor;
-    private TareaCursorAdapter tca;
+    private ArrayAdapter tca;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,18 +50,18 @@ public class MainActivity extends AppCompatActivity {
         });
         lvTareas = (ListView) findViewById(R.id.listaTareas);
 
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d("LAB05-MAIN","en resume");
-        proyectoDAO = new ProyectoDAO(MainActivity.this);
-        proyectoDAO.open();
-        cursor = proyectoDAO.listaTareas(1);
-        Log.d("LAB05-MAIN","mediol "+cursor.getCount());
 
-        tca = new TareaCursorAdapter(MainActivity.this,cursor,proyectoDAO);
+        List<Tarea> tareas = new TareaApiRest().listar();
+
+        tca = new Adaptador(MainActivity.this,tareas);
 
         lvTareas.setAdapter(tca);
 
@@ -70,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Log.d("LAB05-MAIN","on pausa");
 
-        if(cursor!=null) cursor.close();
-        if(proyectoDAO!=null) proyectoDAO.close();
+
         Log.d("LAB05-MAIN","fin on pausa");
 
     }

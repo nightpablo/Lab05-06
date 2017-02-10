@@ -24,7 +24,7 @@ import java.net.URL;
 
 public class TaskAsyncHTTP extends AsyncTask<Object, Void, Object> {
 
-    private final String IP_SERVER = /*"10.0.2.2"*/"192.168.1.20";
+    private final String IP_SERVER = /*"10.0.2.2"*/"192.168.1.12";
     private final String PORT_SERVER = "4000";
     private final String TAG_LOG = "LAB06";
     private HttpURLConnection urlConnection;

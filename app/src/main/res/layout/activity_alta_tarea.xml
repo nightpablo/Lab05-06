@@ -43,7 +43,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2" />
+        android:id="@+id/editText2"
+        android:inputType="numberDecimal" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -74,17 +75,18 @@
         android:weightSum="1">
 
         <Spinner
-            android:layout_width="288dp"
-            android:layout_height="wrap_content"
+            android:layout_width="251dp"
+            android:layout_height="65dp"
             android:id="@+id/spinner"
             style="@android:style/Widget.Spinner.DropDown"
-            android:layout_weight="0.93" />
+            android:layout_weight="0.53" />
 
         <ImageButton android:id="@+id/button_crear_usuario"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="Agregar Usuario"
-            android:src="@drawable/ic_agregar_usuario" />
+            android:src="@drawable/ic_agregar_usuario"
+            android:layout_weight="0.88" />
     </LinearLayout>
 
     <LinearLayout

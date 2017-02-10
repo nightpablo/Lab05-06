@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import dam.isi.frsf.utn.edu.ar.lab05.api.PrioridadApiRest;
+import dam.isi.frsf.utn.edu.ar.lab05.api.ProyectoApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.api.TareaApiRest;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.api.UsuarioApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
@@ -31,7 +33,6 @@ public class AltaTareaActivity extends AppCompatActivity {
     private Button guardar;
     private Button cancelar;
     private TextView prioridad;
-    private ProyectoDAO registro;
     private List<Prioridad> listaPrioridad;
     private Tarea tarea;
     private boolean esEditable;
@@ -41,7 +42,6 @@ public class AltaTareaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alta_tarea);
-        registro = new ProyectoDAO(AltaTareaActivity.this);
 
         descripcionTarea = (EditText) findViewById(R.id.editText);
         horaEstimada = (EditText) findViewById(R.id.editText2);
@@ -54,7 +54,8 @@ public class AltaTareaActivity extends AppCompatActivity {
 
 
         barraPrioridad.setMax(3);
-        List<Usuario> listaUsuario = registro.listarUsuarios();
+        UsuarioApiRest registro = new UsuarioApiRest();
+        List<Usuario> listaUsuario = registro.listar();
         ArrayAdapter<Usuario> adaptador = new ArrayAdapter<Usuario>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item);
         adaptador.add(new Usuario(-1,"[Seleccione un usuario]","Ejemplo@Ejemplo.com"));
         adaptador.addAll(listaUsuario);
@@ -66,7 +67,7 @@ public class AltaTareaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AltaTareaActivity.this,AltaUsuarioActivity.class));
-                List<Usuario> listaUsuario = registro.listarUsuarios();
+                List<Usuario> listaUsuario = new UsuarioApiRest().listar();
                 ArrayAdapter<Usuario> adaptador = new ArrayAdapter<Usuario>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item);
                 adaptador.add(new Usuario(-1,"[Seleccione un usuario]","Ejemplo@Ejemplo.com"));
                 adaptador.addAll(listaUsuario);
@@ -75,13 +76,13 @@ public class AltaTareaActivity extends AppCompatActivity {
             }
         });
 
-        listaPrioridad = registro.listarPrioridades();
+        listaPrioridad = new PrioridadApiRest().listar();
         prioridad.setText("Prioridad: "+listaPrioridad.get(0).toString());
         tarea = new Tarea();
         barraPrioridad.setProgress(0);
         esEditable=false;
         if(getIntent().getExtras().getInt("ID_TAREA")!=0){
-            tarea = registro.buscarTarea(getIntent().getExtras().getInt("ID_TAREA"));
+            tarea = new TareaApiRest().buscarPorId(getIntent().getExtras().getInt("ID_TAREA"));
             barraPrioridad.setProgress(tarea.getPrioridad().getId()-1);
             prioridad.setText("Prioridad: "+listaPrioridad.get(tarea.getPrioridad().getId()-1).toString());
             descripcionTarea.setText(tarea.getDescripcion());
@@ -127,20 +128,19 @@ public class AltaTareaActivity extends AppCompatActivity {
                 else{
 
                     tarea.setDescripcion(descripcionTarea.getText().toString());
-                    tarea.setHorasEstimadas(Integer.parseInt(horaEstimada.getText().toString()));
+                    tarea.setHorasEstimadas((int) Float.parseFloat(horaEstimada.getText().toString()));
                     tarea.setPrioridad(listaPrioridad.get(barraPrioridad.getProgress()));
                     tarea.setResponsable((Usuario) responsable.getSelectedItem());
 
                     if(esEditable) {
-                        registro.actualizarTarea(tarea);
+
+                        new TareaApiRest().actualizar(tarea);
                         Toast.makeText(AltaTareaActivity.this,"Se editó la tarea",Toast.LENGTH_SHORT).show();
                     }
                     else {
                         tarea.setMinutosTrabajados(0);
                         tarea.setFinalizada(false);
-                        tarea.setProyecto(registro.buscarProyecto(1)); // Proyecto 1 temporal
-                        registro.nuevaTarea(tarea);
-
+                        tarea.setProyecto(new ProyectoApiRest().buscarPorId(1)); // Proyecto 1 temporal
                         new TareaApiRest().crear(tarea);
                         Toast.makeText(AltaTareaActivity.this,"Se creó una nueva tarea",Toast.LENGTH_SHORT).show();
                     }
@@ -177,6 +177,7 @@ public class AltaTareaActivity extends AppCompatActivity {
 
         //Log.d("Proyectos: ",""+new ProyectoApiRest().listarProyectos().toString());
 
+        //new EjemploContactos().getContacts(this);
 
     }
 }

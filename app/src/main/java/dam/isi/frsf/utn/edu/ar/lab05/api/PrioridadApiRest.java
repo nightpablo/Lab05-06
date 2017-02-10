@@ -16,22 +16,24 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Prioridad;
 
 public class PrioridadApiRest implements ApiRestImplementation<Prioridad>{
 
+    String NombreTabla = ProyectoDBApiRestMetaData.TABLA_PRIORIDAD;
+
     @Override
-    public void crear(Prioridad entrada){new TaskAsyncHTTP().execute("prioridades","POST",entrada.toJSON());}
+    public void crear(Prioridad entrada){new TaskAsyncHTTP().execute(NombreTabla,"POST",entrada.toJSON());}
 
     @Override
     public void borrar(Integer id) {
-            new TaskAsyncHTTP().execute("prioridades","DELETE",id);
+            new TaskAsyncHTTP().execute(NombreTabla,"DELETE",id);
     }
 
     @Override
-    public void actualizar(Prioridad entrada) {new TaskAsyncHTTP().execute("prioridades","PUT",entrada.toJSON(),entrada.getId());}
+    public void actualizar(Prioridad entrada) {new TaskAsyncHTTP().execute(NombreTabla,"PUT",entrada.toJSON(),entrada.getId());}
 
     @Override
     public List<Prioridad> listar() {
         List<Prioridad> lista_prioridad = new ArrayList<Prioridad>();
         try {
-            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute("prioridad","GET").get();
+            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute(NombreTabla,"GET").get();
             for(int i=0;i<listar.length();i++){
                 lista_prioridad.add(new Prioridad(listar.getJSONObject(i)));
             }

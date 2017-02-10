@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
+import dam.isi.frsf.utn.edu.ar.lab05.api.TareaApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 /**
@@ -31,7 +31,7 @@ public class BusquedaTarea extends AppCompatActivity {
         listView_listaTarea = (ListView) findViewById(R.id.listView_lista_tarea);
         Intent intent = getIntent();
         intent.getExtras().getBoolean("Finalizada");
-        List<Tarea> listaTarea = new ProyectoDAO(BusquedaTarea.this).listarDesviosPlanificacion(intent.getExtras().getBoolean("Finalizada"),Integer.parseInt(intent.getExtras().getString("Minutos")));
+        List<Tarea> listaTarea = new TareaApiRest().listarDesviosPlanificacion(intent.getExtras().getBoolean("Finalizada"),Integer.parseInt(intent.getExtras().getString("Minutos")));
         ArrayAdapter<Tarea> adaptador = new ArrayAdapter<Tarea>(BusquedaTarea.this,android.R.layout.simple_list_item_1,listaTarea);
 
         listView_listaTarea.setAdapter(adaptador);

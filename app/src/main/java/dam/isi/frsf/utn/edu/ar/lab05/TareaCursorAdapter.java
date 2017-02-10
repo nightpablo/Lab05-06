@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -21,8 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDAO;
-import dam.isi.frsf.utn.edu.ar.lab05.dao.ProyectoDBMetadata;
+import dam.isi.frsf.utn.edu.ar.lab05.api.ProyectoDBApiRestMetaData;
+import dam.isi.frsf.utn.edu.ar.lab05.api.TareaApiRest;
 import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
 
 /**
@@ -30,12 +31,10 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Tarea;
  */
 public class TareaCursorAdapter extends CursorAdapter {
     private LayoutInflater inflador;
-    private ProyectoDAO myDao;
     private Context contexto;
 
-    public TareaCursorAdapter(Context contexto, Cursor c, ProyectoDAO dao) {
+    public TareaCursorAdapter(Context contexto, Cursor c) {
         super(contexto, c, false);
-        myDao = dao;
         this.contexto = contexto;
     }
 
@@ -93,12 +92,11 @@ public class TareaCursorAdapter extends CursorAdapter {
 
                         tiempoTrabajadoCalculado = (int) tiempoTrabajadoCalculado/5;
 
+                        TareaApiRest registro = new TareaApiRest();
 
-                        ProyectoDAO registro = new ProyectoDAO(context);
-
-                        Tarea miTarea = registro.buscarTarea((Integer) v.getTag());
+                        Tarea miTarea = registro.buscarPorId((Integer) v.getTag());
                         miTarea.setMinutosTrabajados(miTarea.getMinutosTrabajados()+tiempoTrabajadoCalculado);
-                        registro.actualizarTarea(miTarea);
+                        registro.actualizar(miTarea);
 
                         TiempoInicial=0;
                         TiempoFinal=0;
@@ -114,16 +112,16 @@ public class TareaCursorAdapter extends CursorAdapter {
             }
         });
 
-        nombre.setText(cursor.getString(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.TAREA)));
-        Integer horasAsigandas = cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.HORAS_PLANIFICADAS));
+        nombre.setText(cursor.getString(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.DESCRIPCION)));
+        Integer horasAsigandas = cursor.getInt(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.HORASESTIMADAS));
         tiempoAsignado.setText(horasAsigandas * 60 + " minutos ");
 
-        Integer minutosAsigandos = cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.MINUTOS_TRABAJADOS));
+        Integer minutosAsigandos = cursor.getInt(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.MINUTOSTRABAJADOS));
         tiempoTrabajado.setText(minutosAsigandos + " minutos ");
-        String p = cursor.getString(cursor.getColumnIndex(ProyectoDBMetadata.TablaPrioridadMetadata.PRIORIDAD_ALIAS));
+        String p = cursor.getString(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.PRIORIDAD));
         prioridad.setText(p);
-        responsable.setText(cursor.getString(cursor.getColumnIndex(ProyectoDBMetadata.TablaUsuariosMetadata.USUARIO_ALIAS))+" ");
-        finalizada.setChecked(cursor.getInt(cursor.getColumnIndex(ProyectoDBMetadata.TablaTareasMetadata.FINALIZADA)) == 1);
+        responsable.setText(cursor.getString(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.RESPONSABLE))+" ");
+        finalizada.setChecked(cursor.getInt(cursor.getColumnIndex(ProyectoDBApiRestMetaData.TablaTareaMetaData.FINALIZADA)) == 1);
         //finalizada.setTextIsSelectable(false); No es este, es setClickable
         finalizada.setClickable(false);
 
@@ -164,7 +162,7 @@ public class TareaCursorAdapter extends CursorAdapter {
                             return;
                         }
                         Log.d("LAB05-MAIN", "finalizar tarea : --- " + idTarea);
-                        myDao.finalizar(idTarea);
+                        new TareaApiRest().finalizar(idTarea);
                         handlerRefresh.sendEmptyMessage(1);
                     }
                 });
@@ -190,8 +188,8 @@ public class TareaCursorAdapter extends CursorAdapter {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ProyectoDAO registro = new ProyectoDAO(context);
-                                        registro.borrarTarea(registro.buscarTarea(idTarea));
+                                        TareaApiRest registro = new TareaApiRest();
+                                        registro.borrar(idTarea);
                                         handlerRefresh.sendEmptyMessage(1);
                                     }
                                 })
@@ -208,7 +206,20 @@ public class TareaCursorAdapter extends CursorAdapter {
     Handler handlerRefresh = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message inputMessage) {
-            TareaCursorAdapter.this.changeCursor(myDao.listaTareas(1));
+            String[] a = {
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData._ID,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.DESCRIPCION,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.HORASESTIMADAS,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.MINUTOSTRABAJADOS,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.PRIORIDAD,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.RESPONSABLE,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.PROYECTO,
+                    ProyectoDBApiRestMetaData.TablaTareaMetaData.FINALIZADA
+            };
+
+            MatrixCursor aa = new MatrixCursor(a);
+            aa.addRow(new TareaApiRest().listar());
+            TareaCursorAdapter.this.changeCursor(aa);
         }
     };
 }

@@ -15,26 +15,29 @@ import dam.isi.frsf.utn.edu.ar.lab05.modelo.Usuario;
  */
 
 public class UsuarioApiRest implements ApiRestImplementation<Usuario> {
+
+    String NombreTabla = ProyectoDBApiRestMetaData.TABLA_USUARIO;
+
     @Override
     public void crear(Usuario entrada) {
-        new TaskAsyncHTTP().execute("usuarios","POST",entrada.toJSON());
+        new TaskAsyncHTTP().execute(NombreTabla,"POST",entrada.toJSON());
     }
 
     @Override
     public void borrar(Integer id) {
-        new TaskAsyncHTTP().execute("usuarios","DELETE",id);
+        new TaskAsyncHTTP().execute(NombreTabla,"DELETE",id);
     }
 
     @Override
     public void actualizar(Usuario entrada) {
-        new TaskAsyncHTTP().execute("usuarios","PUT",entrada.toJSON(),entrada.getId());
+        new TaskAsyncHTTP().execute(NombreTabla,"PUT",entrada.toJSON(),entrada.getId());
     }
 
     @Override
     public List<Usuario> listar() {
         List<Usuario> lista_usuario = new ArrayList<Usuario>();
         try {
-            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute("prioridad","GET").get();
+            JSONArray listar = (JSONArray) new TaskAsyncHTTP().execute(NombreTabla,"GET").get();
             for(int i=0;i<listar.length();i++){
                 lista_usuario.add(new Usuario(listar.getJSONObject(i)));
             }
